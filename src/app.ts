@@ -1,10 +1,12 @@
 import express from "express";
+import authRouter from "./routers/authRouter";
 import postsRouter from "./routers/postsRouter";
 
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/", authRouter);
 app.use("/posts", postsRouter);
 
 const PORT = 6969;
