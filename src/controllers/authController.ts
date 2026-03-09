@@ -1,10 +1,13 @@
 import type { Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
 import validateSignupForm from "@/middleware/validateSignupForm";
+import "dotenv/config";
+import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/prisma";
 
 const signupPost = [
 	validateSignupForm,
-	(req: Request, res: Response) => {
+	async (req: Request, res: Response) => {
 		const formData = matchedData(req, { onlyValidData: false });
 		const { email, username } = formData;
 
@@ -12,7 +15,20 @@ const signupPost = [
 		if (!errors.isEmpty())
 			return res.status(400).json({ errors: errors.array(), email, username });
 
-		res.json("signup route hit");
+		const { password } = formData;
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(password, salt);
+
+		const newUser = await prisma.user.create({
+			data: {
+				email,
+				username,
+				password: hashedPassword,
+			},
+		});
+		const userDetails = { email: newUser.email, username: newUser.username };
+
+		res.status(201).json(userDetails);
 	},
 ];
 
