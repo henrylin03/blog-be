@@ -1,7 +1,6 @@
-import type { Request, Response } from "express";
+// import type { Request, Response } from "express";
+import passport from "@/lib/passport";
 
-const loginPost = (req: Request, res: Response) => {
-	res.json("loggin");
-};
+const loginPost = passport.authenticate("local", { session: false });
 
 export { loginPost };
