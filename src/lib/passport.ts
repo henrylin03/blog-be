@@ -1,6 +1,7 @@
 import passport from "passport";
-import JwtStrategy, { ExtractJwt } from "passport-jwt";
+import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import "dotenv/config";
+import { prisma } from "./prisma";
 
 const OPTIONS = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -8,8 +9,15 @@ const OPTIONS = {
 };
 
 passport.use(
-	new JwtStrategy.Strategy(OPTIONS, (jwtPayload, done) => {
-		if (jwtPayload.email === "correct@email.com") return done(null, true);
-		return done(null, false);
+	new JwtStrategy(OPTIONS, async (jwtPayload, done) => {
+		try {
+			const user = await prisma.user.findUnique({
+				where: { email: jwtPayload.email },
+			});
+			if (!user) return done(null, false, { message: "Email not found" });
+			return done(null, user);
+		} catch (error) {
+			return done(error, false);
+		}
 	}),
 );
