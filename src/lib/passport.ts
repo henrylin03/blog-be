@@ -7,8 +7,6 @@ const OPTIONS = {
 	secretOrKey: String(process.env.SECRET),
 };
 
-// TODO: ensure process.env.SECRET actually exists -- maybe with config file + zod? keep DRY with authController too
-
 passport.use(
 	new JwtStrategy.Strategy(OPTIONS, (jwtPayload, done) => {
 		if (jwtPayload.email === "correct@email.com") return done(null, true);

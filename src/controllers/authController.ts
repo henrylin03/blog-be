@@ -9,11 +9,6 @@ const loginPost = (req: Request, res: Response) => {
 			const options = { expiresIn: 120 };
 			const secret = process.env.SECRET;
 
-			if (!process.env.SECRET)
-				throw new Error(
-					"Please ensure you have a 'SECRET' variable in .env for JWT",
-				);
-
 			const token = jwt.sign({ email }, String(secret), options);
 			return res.status(200).json({ message: "Auth ok", token });
 		}

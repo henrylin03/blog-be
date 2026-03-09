@@ -2,6 +2,10 @@ import express from "express";
 import authRouter from "./routers/authRouter";
 import postsRouter from "./routers/postsRouter";
 import usersRouter from "./routers/usersRouter";
+import "dotenv/config";
+
+if (!process.env.SECRET)
+	throw new Error("Please ensure you have a 'SECRET' variable in .env for JWT");
 
 const app = express();
 
