@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
+import passport from "@/lib/passport";
 
 const loginPost = (req: Request, res: Response) => {
 	const { email, password } = req.body;
@@ -15,5 +16,9 @@ const loginPost = (req: Request, res: Response) => {
 	}
 	res.status(401).json({ error: "Auth failed" });
 };
+
+// const loginPost = passport.authenticate("jwt", {
+//   session: false,
+// });
 
 export { loginPost };
