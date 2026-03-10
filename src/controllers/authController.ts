@@ -10,7 +10,7 @@ const createJwt = (req: Request, res: Response) => {
 	const JWT_EXPIRATION_IN_MS = 120; // 2mins
 	const secret = process.env.SECRET;
 
-	const token = jwt.sign({ user: { id: user.id } }, String(secret), {
+	const token = jwt.sign({ sub: user.id }, String(secret), {
 		expiresIn: JWT_EXPIRATION_IN_MS,
 	});
 
