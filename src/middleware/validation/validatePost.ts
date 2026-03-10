@@ -6,8 +6,8 @@ const validatePost = [
 		.withMessage("Title must be between 3 and 60 characters"),
 
 	body("text")
-		.isLength({ min: 500, max: 15000 })
-		.withMessage("Blog post must be between 500 and 15,000 characters"),
+		.isLength({ min: 50, max: 15000 })
+		.withMessage("Blog post must be between 50 and 15,000 characters"),
 ];
 
 export default validatePost;
