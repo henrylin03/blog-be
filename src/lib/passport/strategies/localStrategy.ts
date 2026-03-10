@@ -1,18 +1,18 @@
 import bcrypt from "bcryptjs";
-import passport from "passport";
 import {
 	type IStrategyOptions,
 	Strategy as LocalStrategy,
 } from "passport-local";
-import { prisma } from "./prisma";
+import { prisma } from "@/lib/prisma";
 
 const OPTIONS: IStrategyOptions = {
 	usernameField: "usernameOrEmail",
 	session: false,
 };
 
-passport.use(
-	new LocalStrategy(OPTIONS, async (username, password, done) => {
+const localStrategy = new LocalStrategy(
+	OPTIONS,
+	async (username, password, done) => {
 		try {
 			const user = await prisma.user.findFirst({
 				where: { OR: [{ email: username }, { username }] },
@@ -26,7 +26,7 @@ passport.use(
 		} catch (error) {
 			done(error);
 		}
-	}),
+	},
 );
 
-export default passport;
+export default localStrategy;
