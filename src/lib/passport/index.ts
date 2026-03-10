@@ -1,13 +1,8 @@
-import "dotenv/config";
 import passport from "passport";
-import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import localStrategy from "./localStrategy";
-
-const JWT_STRATEGY_OPTIONS = {
-	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-	secretOrKey: process.env.SECRET,
-};
+import jwtStrategy from "./strategies/jwtStrategy";
+import localStrategy from "./strategies/localStrategy";
 
 passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 export default passport;
