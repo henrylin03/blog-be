@@ -1,18 +1,11 @@
 import type { Request, Response } from "express";
-import { authenticateWithJwt } from "@/controllers/authController";
 import { prisma } from "@/lib/prisma";
-
-const addNewPost = [
+import {
 	authenticateWithJwt,
-	async (req: Request, res: Response) => {
-		const { user } = req;
-		if (!user) return res.status(401).json({ error: "Unauthorised" });
-		if (!user.isAuthor)
-			return res.status(403).json({ error: "You must be an author to post" });
+	confirmUserIsAuthorised,
+} from "@/middleware/auth";
 
-		res.json(user);
-	},
-];
+const addNewPost = [authenticateWithJwt, confirmUserIsAuthorised];
 
 const getPublishedPosts = async (_req: Request, res: Response) => {
 	const publishedPosts = await prisma.post.findMany({
