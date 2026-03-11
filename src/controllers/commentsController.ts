@@ -11,18 +11,18 @@ const addComment = [
 	checkPostExists,
 	validateComment,
 	async (req: AuthenticatedRequest, res: Response) => {
+		const { text: commentText } = matchedData(req, {
+			onlyValidData: false,
+		});
 		const errors = validationResult(req);
 		if (!errors.isEmpty())
-			return res.status(400).json({ errors: errors.array() });
-
-		const { postId } = req.params;
-		const { text: commentText } = matchedData(req, { onlyValidData: false });
+			return res.status(400).json({ errors: errors.array(), commentText });
 
 		try {
 			const newComment = await prisma.comment.create({
 				data: {
 					text: commentText,
-					postId: String(postId),
+					postId: String(req.params.postId),
 					authorId: req.user.id,
 				},
 			});
