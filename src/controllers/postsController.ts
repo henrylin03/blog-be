@@ -97,8 +97,7 @@ const getPublishedPosts = async (_req: Request, res: Response) => {
 			isPublished: true,
 		},
 	});
-
-	res.json(publishedPosts);
+	res.status(200).json({ posts: publishedPosts });
 };
 
 const getPost = async (req: Request, res: Response) => {
