@@ -2,6 +2,7 @@ import { Router } from "express";
 import { newUserPost } from "@/controllers/usersController";
 
 const usersRouter = Router();
-usersRouter.post("/new", ...newUserPost);
+
+usersRouter.post("/", ...newUserPost);
 
 export default usersRouter;
