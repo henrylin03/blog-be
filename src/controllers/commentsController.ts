@@ -58,7 +58,7 @@ const deleteComment = [
 			const _deleteComment = await prisma.comment.delete({
 				where: { id: String(comment?.id) },
 			});
-			res.status(204);
+			res.status(204).end();
 		} catch (error) {
 			res.status(500).json({ error });
 		}
