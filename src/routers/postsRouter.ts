@@ -5,6 +5,8 @@ import {
 	editPost,
 	getPost,
 	getPublishedPosts,
+	publishPost,
+	unpublishPost,
 } from "@/controllers/postsController";
 import commentsRouter from "./commentsRouter";
 
@@ -15,8 +17,9 @@ postsRouter.post("/", addNewDraftPost);
 
 postsRouter.get("/:postId", getPost);
 postsRouter.put("/:postId", editPost);
-//? .patch for publishing?? or just have the req.body have it in form so when user clicks 'publish' (instead of 'save to draft') we also send 'isPublished = true'??
 postsRouter.delete("/:postId", deletePost);
+postsRouter.patch("/:postId/publish", publishPost);
+postsRouter.patch("/:postId/draft", unpublishPost);
 
 postsRouter.use("/:postId/comments", commentsRouter);
 
