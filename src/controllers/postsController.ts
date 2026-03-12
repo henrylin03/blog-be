@@ -102,16 +102,16 @@ const getPublishedPosts = async (_req: Request, res: Response) => {
 
 const getPost = async (req: Request, res: Response) => {
 	const { postId } = req.params;
-	const post = await prisma.post.findUnique({
-		where: {
-			id: String(postId),
-		},
-	});
 
-	if (!post) return res.status(404).json({ error: "Post does not exist" });
-	// TODO: after auth setup, if unpublished, only that author can see the post.
-
-	res.status(200).json({ post });
+	try {
+		const post = await prisma.post.findUnique({
+			where: { id: String(postId) },
+		});
+		if (!post) return res.status(404).json({ error: "Post does not exist" });
+		res.status(200).json({ post });
+	} catch (error) {
+		res.status(500).json({ error });
+	}
 };
 
 export { addNewDraftPost, deletePost, editPost, getPost, getPublishedPosts };
