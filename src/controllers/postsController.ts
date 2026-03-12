@@ -111,7 +111,7 @@ const getPost = async (req: Request, res: Response) => {
 	if (!post) return res.status(404).json({ error: "Post does not exist" });
 	// TODO: after auth setup, if unpublished, only that author can see the post.
 
-	res.json(post);
+	res.status(200).json({ post });
 };
 
 export { addNewDraftPost, deletePost, editPost, getPost, getPublishedPosts };
