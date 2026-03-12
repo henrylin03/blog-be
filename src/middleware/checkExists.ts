@@ -30,6 +30,8 @@ const checkCommentExists = async (
 	});
 	if (!comment) return res.status(404).json({ error: "Comment not found" });
 
+	req.comment = comment;
+
 	next();
 };
 

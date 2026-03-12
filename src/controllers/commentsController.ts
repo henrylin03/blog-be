@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
 import { prisma } from "@/lib/prisma";
-import { checkPostExists } from "@/middleware/checkExists";
+import { checkCommentExists, checkPostExists } from "@/middleware/checkExists";
 import validateComment from "@/middleware/validation/validateComment";
 import type { AuthenticatedRequest } from "@/types/types";
 import { authenticateWithJwt } from "../middleware/auth";
@@ -37,7 +37,7 @@ const addComment = [
 
 const deleteComment = [
 	authenticateWithJwt,
-	checkPostExists,
+	checkCommentExists,
 	async (req: AuthenticatedRequest, res: Response) => {
 		const { commentId } = req.params;
 
