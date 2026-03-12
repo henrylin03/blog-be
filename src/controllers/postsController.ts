@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
 import { prisma } from "@/lib/prisma";
 import { authenticateWithJwt, checkIsAuthor } from "@/middleware/auth";
@@ -100,18 +100,37 @@ const getPublishedPosts = async (_req: Request, res: Response) => {
 	res.status(200).json({ posts: publishedPosts });
 };
 
-const getPost = async (req: Request, res: Response) => {
-	const { postId } = req.params;
+// const getPost = async (req: Request, res: Response) => {
+// 	const { postId } = req.params;
 
-	try {
-		const post = await prisma.post.findUnique({
-			where: { id: String(postId) },
-		});
-		if (!post) return res.status(404).json({ error: "Post does not exist" });
-		res.status(200).json({ post });
-	} catch (error) {
-		res.status(500).json({ error });
-	}
-};
+// 	try {
+// 		const post = await prisma.post.findUnique({
+// 			where: { id: String(postId) },
+// 		});
+// 		if (!post) return res.status(404).json({ error: "Post does not exist" });
+// 		res.status(200).json({ post });
+// 	} catch (error) {
+// 		res.status(500).json({ error });
+// 	}
+// };
+
+const getPost = [
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const post = await prisma.post.findUnique({
+				where: { id: String(req.params.postId) },
+			});
+			if (!post) return res.status(404).json({ error: "Post does not exist" });
+			if (post.isPublished && post.publishedAt) res.status(200).json({ post });
+			next();
+		} catch (error) {
+			res.status(500).json({ error });
+		}
+	},
+	authenticateWithJwt,
+	(req: Request, res: Response, next: NextFunction) => {
+		res.send("hello");
+	},
+];
 
 export { addNewDraftPost, deletePost, editPost, getPost, getPublishedPosts };
