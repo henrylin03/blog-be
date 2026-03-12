@@ -39,21 +39,24 @@ const deleteComment = [
 	authenticateWithJwt,
 	checkCommentExists,
 	async (req: AuthenticatedRequest, res: Response) => {
-		const { commentId } = req.params;
+		const { comment, user } = req;
+		const { postId } = req.params;
 
-		const comment = await prisma.comment.findUnique({
-			where: { id: String(commentId) },
+		const postWithThisComment = await prisma.post.findUnique({
+			where: { id: String(postId) },
 		});
 
-		if (!comment) return res.status(404).json({ error: "Comment not found" });
-		if (comment.authorId !== req.user.id)
+		const deleterIsPostAuthor = postWithThisComment?.authorId === user.id;
+		const deleterIsCommenter = comment?.authorId === user.id;
+
+		if (!deleterIsPostAuthor && !deleterIsCommenter)
 			return res
 				.status(403)
 				.json({ error: "Not authorised to delete comment" });
 
 		try {
 			const _deleteComment = await prisma.comment.delete({
-				where: { id: String(commentId) },
+				where: { id: String(comment?.id) },
 			});
 			res.status(204);
 		} catch (error) {
