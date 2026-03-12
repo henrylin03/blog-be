@@ -6,6 +6,7 @@ import {
 	getPost,
 	getPublishedPosts,
 	publishPost,
+	unpublishPost,
 } from "@/controllers/postsController";
 import commentsRouter from "./commentsRouter";
 
@@ -18,7 +19,7 @@ postsRouter.get("/:postId", getPost);
 postsRouter.put("/:postId", editPost);
 postsRouter.delete("/:postId", deletePost);
 postsRouter.patch("/:postId/publish", publishPost);
-// postsRouter.patch("/:postId/draft", unpublishPost);
+postsRouter.patch("/:postId/draft", unpublishPost);
 
 postsRouter.use("/:postId/comments", commentsRouter);
 

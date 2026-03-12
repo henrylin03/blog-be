@@ -147,7 +147,7 @@ const publishPost = [
 		if (req.user.id !== post?.authorId)
 			return res
 				.status(403)
-				.json({ error: "Only the author of this post can publish it" });
+				.json({ error: "Only the author of this post can modify it" });
 
 		if (post.isPublished)
 			return res.status(200).json({ message: "Post already published", post });
@@ -161,6 +161,36 @@ const publishPost = [
 	},
 ];
 
+const unpublishPost = [
+	authenticateWithJwt,
+	checkIsAuthor,
+	validatePost,
+	async (req: AuthenticatedRequest, res: Response) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty())
+			return res.status(400).json({ errors: errors.array() });
+
+		const post = await prisma.post.findUnique({
+			where: { id: String(req.params.postId) },
+		});
+
+		if (req.user.id !== post?.authorId)
+			return res
+				.status(403)
+				.json({ error: "Only the author of this post can modify it" });
+
+		if (!post.isPublished)
+			return res.status(200).json({ message: "Post already in draft", post });
+
+		const updatePost = await prisma.post.update({
+			where: { id: String(req.params.postId) },
+			data: { isPublished: false, publishedAt: null },
+		});
+
+		res.status(200).json({ message: "Post marked as draft", post: updatePost });
+	},
+];
+
 export {
 	addNewDraftPost,
 	deletePost,
@@ -168,4 +198,5 @@ export {
 	getPost,
 	getPublishedPosts,
 	publishPost,
+	unpublishPost,
 };
