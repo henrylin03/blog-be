@@ -166,8 +166,6 @@ const publishPost = [
 	},
 ];
 
-// update last modified date
-
 const unpublishPost = [
 	authenticateWithJwt,
 	checkIsAuthor,
