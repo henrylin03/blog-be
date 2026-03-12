@@ -36,9 +36,15 @@ const getMyPosts = [
 	authenticateWithJwt,
 	checkIsAuthor,
 	async (req: AuthenticatedRequest, res: Response) => {
+		const { published: isPublished } = req.query;
+		const isPublishedFilterQuery =
+			typeof isPublished === "string"
+				? { isPublished: Boolean(JSON.parse(isPublished)) }
+				: {};
+
 		try {
 			const myPosts = await prisma.post.findMany({
-				where: { authorId: req.user.id },
+				where: { AND: { authorId: req.user.id, ...isPublishedFilterQuery } },
 			});
 			res.status(200).json({ posts: myPosts });
 		} catch (error) {
