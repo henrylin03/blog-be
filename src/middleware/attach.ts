@@ -1,11 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { prisma } from "@/lib/prisma";
 
-const checkPostExists = async (
-	req: Request,
-	res: Response,
-	next: NextFunction,
-) => {
+const attachPost = async (req: Request, res: Response, next: NextFunction) => {
 	const { postId } = req.params;
 	if (!postId) return res.status(404).json({ error: "Post ID missing" });
 
@@ -14,10 +10,12 @@ const checkPostExists = async (
 	});
 	if (!post) return res.status(404).json({ error: "Post not found" });
 
+	req.post = post;
+
 	next();
 };
 
-const checkCommentExists = async (
+const attachComment = async (
 	req: Request,
 	res: Response,
 	next: NextFunction,
@@ -35,4 +33,4 @@ const checkCommentExists = async (
 	next();
 };
 
-export { checkCommentExists, checkPostExists };
+export { attachPost, attachComment };

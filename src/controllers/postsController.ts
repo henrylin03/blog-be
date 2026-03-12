@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
 import { prisma } from "@/lib/prisma";
+import { attachPost } from "@/middleware/attach";
 import { authenticateWithJwt, checkIsAuthor } from "@/middleware/auth";
-import { checkPostExists } from "@/middleware/checkExists";
 import validatePost from "@/middleware/validation/validatePost";
 import type { AuthenticatedRequest } from "@/types/types";
 
@@ -24,14 +24,10 @@ const addNewDraftPost = [
 const deletePost = [
 	authenticateWithJwt,
 	checkIsAuthor,
-	checkPostExists,
+	attachPost,
 	async (req: AuthenticatedRequest, res: Response) => {
+		const { post } = req;
 		const { id: userId } = req.user;
-		const { postId } = req.params;
-
-		const post = await prisma.post.findUnique({
-			where: { id: String(postId) },
-		});
 
 		if (post?.authorId !== userId)
 			return res.status(403).json({
@@ -41,7 +37,7 @@ const deletePost = [
 
 		try {
 			const _postForDeletion = await prisma.post.delete({
-				where: { id: String(req.params.postId) },
+				where: { id: post.id },
 			});
 			res.status(204).end();
 		} catch (error) {
@@ -53,7 +49,7 @@ const deletePost = [
 const editPost = [
 	authenticateWithJwt,
 	checkIsAuthor,
-	checkPostExists,
+	attachPost,
 	validatePost,
 	async (req: AuthenticatedRequest, res: Response) => {
 		const data = matchedData(req, { onlyValidData: false });
@@ -63,12 +59,8 @@ const editPost = [
 		if (!errors.isEmpty())
 			return res.status(400).json({ errors: errors.array(), title, text });
 
-		const { postId } = req.params;
-		const post = await prisma.post.findUnique({
-			where: { id: String(postId) },
-		});
-
-		if (String(post?.authorId) !== String(req.user.id))
+		const { post } = req;
+		if (String(post?.authorId) !== req.user.id)
 			return res.status(403).json({
 				error: "InsufficientPermissions",
 				message: "Only the author of a post can edit it",
@@ -76,7 +68,7 @@ const editPost = [
 
 		try {
 			const updatedPost = await prisma.post.update({
-				where: { id: String(postId) },
+				where: { id: String(post?.id) },
 				data: {
 					title,
 					text,
@@ -122,7 +114,7 @@ const getPost = [
 		if (!user.isAuthor)
 			return res.status(404).json({ error: "Post not found" });
 
-		if (String(post?.authorId) !== String(req.user.id))
+		if (String(post?.authorId) !== req.user.id)
 			return res
 				.status(403)
 				.json({ error: "Only author of post can access it" });
@@ -140,10 +132,7 @@ const publishPost = [
 		if (!errors.isEmpty())
 			return res.status(400).json({ errors: errors.array() });
 
-		const post = await prisma.post.findUnique({
-			where: { id: String(req.params.postId) },
-		});
-
+		const { post } = req;
 		if (req.user.id !== post?.authorId)
 			return res
 				.status(403)
@@ -154,7 +143,7 @@ const publishPost = [
 
 		const currentDatetime = new Date();
 		const updatePost = await prisma.post.update({
-			where: { id: String(req.params.postId) },
+			where: { id: post.id },
 			data: {
 				isPublished: true,
 				publishedAt: currentDatetime,
@@ -168,22 +157,21 @@ const publishPost = [
 
 const unpublishPost = [
 	authenticateWithJwt,
+	attachPost,
 	checkIsAuthor,
 	async (req: AuthenticatedRequest, res: Response) => {
-		const post = await prisma.post.findUnique({
-			where: { id: String(req.params.postId) },
-		});
+		const { post } = req;
 
-		if (req.user.id !== post?.authorId)
+		if (req.user.id !== String(post?.authorId))
 			return res
 				.status(403)
 				.json({ error: "Only the author of this post can modify it" });
 
-		if (!post.isPublished)
+		if (!post?.isPublished)
 			return res.status(200).json({ message: "Post already in draft", post });
 
 		const updatePost = await prisma.post.update({
-			where: { id: String(req.params.postId) },
+			where: { id: post.id },
 			data: {
 				isPublished: false,
 				publishedAt: null,

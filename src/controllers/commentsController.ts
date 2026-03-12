@@ -1,14 +1,14 @@
 import type { Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
 import { prisma } from "@/lib/prisma";
-import { checkCommentExists, checkPostExists } from "@/middleware/checkExists";
+import { attachComment, attachPost } from "@/middleware/attach";
 import validateComment from "@/middleware/validation/validateComment";
 import type { AuthenticatedRequest } from "@/types/types";
 import { authenticateWithJwt } from "../middleware/auth";
 
 const addComment = [
 	authenticateWithJwt,
-	checkPostExists,
+	attachPost,
 	validateComment,
 	async (req: AuthenticatedRequest, res: Response) => {
 		const { text: commentText } = matchedData(req, {
@@ -37,7 +37,7 @@ const addComment = [
 
 const deleteComment = [
 	authenticateWithJwt,
-	checkCommentExists,
+	attachComment,
 	async (req: AuthenticatedRequest, res: Response) => {
 		const { comment, user } = req;
 		const { postId } = req.params;
@@ -66,11 +66,11 @@ const deleteComment = [
 ];
 
 const getComments = [
-	checkPostExists,
+	attachPost,
 	async (req: Request, res: Response) => {
-		const { postId } = req.params;
+		const { post } = req;
 		const comments = await prisma.comment.findMany({
-			where: { postId: String(postId) },
+			where: { postId: String(post?.id) },
 		});
 		return res.status(200).json({
 			message: `${comments.length} comments retrieved for post`,
