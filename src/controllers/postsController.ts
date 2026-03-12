@@ -161,15 +161,12 @@ const publishPost = [
 	},
 ];
 
+// update last modified date
+
 const unpublishPost = [
 	authenticateWithJwt,
 	checkIsAuthor,
-	validatePost,
 	async (req: AuthenticatedRequest, res: Response) => {
-		const errors = validationResult(req);
-		if (!errors.isEmpty())
-			return res.status(400).json({ errors: errors.array() });
-
 		const post = await prisma.post.findUnique({
 			where: { id: String(req.params.postId) },
 		});
