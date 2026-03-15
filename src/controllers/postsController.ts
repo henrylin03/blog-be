@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
+import { calculateTimeToReadInMinutes } from "@/helpers/helpers";
 import { prisma } from "@/lib/prisma";
 import { attachPost } from "@/middleware/attach";
 import { authenticateWithJwt, checkIsAuthor } from "@/middleware/auth";
@@ -155,6 +156,9 @@ const publishPost = [
 				isPublished: true,
 				publishedAt: currentDatetime,
 				lastModifiedAt: currentDatetime,
+				timeToReadInMinutes: calculateTimeToReadInMinutes(
+					`${post.lede} ${post.title}`,
+				),
 			},
 		});
 
