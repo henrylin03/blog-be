@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Post" ALTER COLUMN "timeToReadInMinutes" SET DATA TYPE DOUBLE PRECISION;

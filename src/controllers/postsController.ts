@@ -157,7 +157,7 @@ const publishPost = [
 				publishedAt: currentDatetime,
 				lastModifiedAt: currentDatetime,
 				timeToReadInMinutes: calculateTimeToReadInMinutes(
-					`${post.lede} ${post.title}`,
+					`${post.lede} ${post.body}`,
 				),
 			},
 		});

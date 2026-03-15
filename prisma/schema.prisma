@@ -32,7 +32,7 @@ model Post {
   createdAt           DateTime  @default(now())
   publishedAt         DateTime?
   lastModifiedAt      DateTime  @default(now())
-  timeToReadInMinutes Int?
+  timeToReadInMinutes Float?
   author              User      @relation(fields: [authorId], references: [id])
   authorId            String
   comments            Comment[]
