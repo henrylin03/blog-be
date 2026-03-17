@@ -1,7 +1,7 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-const createJwt = (req: Request, res: Response) => {
+const createJwt = (req: Request, res: Response, next: NextFunction) => {
 	const { user } = req;
 	if (!user) return res.status(401).json({ error: "Auth failed" });
 
@@ -12,7 +12,8 @@ const createJwt = (req: Request, res: Response) => {
 		expiresIn: JWT_EXPIRATION,
 	});
 
-	return res.status(200).json({ message: "Auth ok", token });
+	res.status(200).json({ message: "Auth ok", token });
+	next();
 };
 
-export default createJwt;
+export { createJwt };

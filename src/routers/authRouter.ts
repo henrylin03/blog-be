@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { loginPost } from "@/controllers/authController";
+import { loginPost, validateJwtGet } from "@/controllers/authController";
 
 const authRouter = Router();
 
+authRouter.get("/validate-jwt", validateJwtGet);
 authRouter.post("/login", loginPost);
 
 export default authRouter;
