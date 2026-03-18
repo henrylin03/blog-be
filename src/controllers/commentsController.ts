@@ -2,9 +2,9 @@ import type { Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
 import { prisma } from "@/lib/prisma";
 import { attachComment, attachPost } from "@/middleware/attach";
+import { authenticateWithJwt } from "@/middleware/auth";
 import validateComment from "@/middleware/validation/validateComment";
 import type { AuthenticatedRequest } from "@/types/types";
-import { authenticateWithJwt } from "../middleware/auth";
 
 const addComment = [
 	authenticateWithJwt,
@@ -113,4 +113,4 @@ const getComments = [
 	},
 ];
 
-export { addComment, editComment, deleteComment, getComments };
+export { addComment, deleteComment, editComment, getComments };
