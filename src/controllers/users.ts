@@ -8,14 +8,14 @@ import type { AuthenticatedRequest } from "@/types/types";
 const newUserPost = [
 	validateSignupForm,
 	async (req: Request, res: Response) => {
-		const formData = matchedData(req, { onlyValidData: false });
-		const { email, username } = formData;
-
 		const errors = validationResult(req);
 		if (!errors.isEmpty())
-			return res.status(400).json({ errors: errors.array(), email, username });
+			return res.status(400).json({ errors: errors.array() });
 
-		const { password, firstName, lastName, website } = formData;
+		const formData = matchedData(req);
+		const { email, username, password, firstName, lastName, website } =
+			formData;
+
 		const salt = await bcrypt.genSalt(10);
 		const hashedPassword = await bcrypt.hash(password, salt);
 

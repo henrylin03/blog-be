@@ -11,13 +11,11 @@ const addComment = [
 	attachPost,
 	validateComment,
 	async (req: AuthenticatedRequest, res: Response) => {
-		const { text: commentText } = matchedData(req, {
-			onlyValidData: false,
-		});
 		const errors = validationResult(req);
 		if (!errors.isEmpty())
-			return res.status(400).json({ errors: errors.array(), commentText });
+			return res.status(400).json({ errors: errors.array() });
 
+		const { text: commentText } = matchedData(req);
 		try {
 			const newComment = await prisma.comment.create({
 				data: {
@@ -70,10 +68,11 @@ const editComment = [
 	attachComment,
 	validateComment,
 	async (req: AuthenticatedRequest, res: Response) => {
-		const { text } = matchedData(req, { onlyValidData: false });
 		const errors = validationResult(req);
 		if (!errors.isEmpty())
-			return res.status(400).json({ errors: errors.array(), comment: text });
+			return res.status(400).json({ errors: errors.array() });
+
+		const { text } = matchedData(req);
 
 		const { comment, user } = req;
 		if (String(comment?.authorId) !== user.id)
