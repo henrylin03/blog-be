@@ -13,6 +13,15 @@ export const USERS = [
 		unhashedPassword: String(process.env.SEEDED_USER_PASSWORD),
 		isAuthor: false,
 	},
+	{
+		id: "superadmin",
+		username: "henrar",
+		email: "henry@test.com",
+		unhashedPassword: String(process.env.SEEDED_AUTHOR_PASSWORD),
+		firstName: "Henry",
+		lastName: "Lin",
+		website: "https://henrylin.io",
+	},
 ];
 
 export const MOCK_POSTS = [
@@ -45,7 +54,7 @@ For hobbyists especially, the knee shield rewards structure over athleticism. Wh
 		createdAt: new Date(2026, 2, 10),
 		publishedAt: new Date(2026, 2, 14),
 		isPublished: true,
-		authorId: "test-author",
+		authorId: "superadmin",
 		text: `
 Half guard often gets a bad reputation because it’s where people end up when things are already going wrong.
 
@@ -66,7 +75,7 @@ None of these sweeps require explosive athleticism. They rely on timing, leverag
 		createdAt: new Date(2026, 2, 7),
 		publishedAt: new Date(2026, 2, 14),
 		isPublished: true,
-		authorId: "test-author",
+		authorId: "superadmin",
 		text: `
 Side control is one of those positions where beginners tend to panic.
 
@@ -89,7 +98,7 @@ Without frames, shrimping rarely works because your opponent simply follows your
 		createdAt: new Date(2026, 2, 2),
 		publishedAt: new Date(2026, 2, 14),
 		isPublished: true,
-		authorId: "test-author",
+		authorId: "superadmin",
 		text: `
 Collar sleeve guard is one of those classic gi positions that quietly works at every level.
 
@@ -203,7 +212,8 @@ Training with bigger partners can be frustrating, but it also helps develop effi
 		title: "Why Consistency Matters More Than Talent in BJJ",
 		lede: "Natural talent helps, but consistency matters way more. Most people who get good at jiu-jitsu simply never stopped showing up.",
 		createdAt: new Date(2026, 1, 6),
-		authorId: "test-author",
+		isPublished: false,
+		authorId: "superadmin",
 		text: `
 It’s easy to assume the people who get good at jiu-jitsu are naturally gifted.
 

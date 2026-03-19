@@ -4,7 +4,7 @@ import { calculateTimeToReadInMinutes } from "@/helpers/helpers";
 import { prisma } from "@/lib/prisma";
 import { attachDraftPostAndReturnPublishedPost } from "@/middleware/attach";
 import { authenticateWithJwt } from "@/middleware/auth";
-import validatePost from "@/middleware/validation/validatePost";
+import validatePost from "@/middleware/validation/post";
 import type { AuthenticatedRequest } from "@/types/types";
 
 const addNewDraftPost = async (req: AuthenticatedRequest, res: Response) => {

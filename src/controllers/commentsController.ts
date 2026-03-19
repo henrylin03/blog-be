@@ -3,7 +3,7 @@ import { matchedData, validationResult } from "express-validator";
 import { prisma } from "@/lib/prisma";
 import { attachComment, attachPost } from "@/middleware/attach";
 import { authenticateWithJwt } from "@/middleware/auth";
-import validateComment from "@/middleware/validation/validateComment";
+import validateComment from "@/middleware/validation/comment";
 import type { AuthenticatedRequest } from "@/types/types";
 
 const addComment = [

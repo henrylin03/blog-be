@@ -37,6 +37,28 @@ const validateSignupForm = [
 	body("password")
 		.isLength({ min: 8 })
 		.withMessage("Password must be longer than 8 characters"),
+
+	body("firstName")
+		.trim()
+		.optional({ values: "null" })
+		.isAlpha("en-AU", { ignore: "-" })
+		.withMessage("First name must only contain letters and hyphens")
+		.isLength({ min: 1, max: 50 })
+		.withMessage("First name must be between 1 and 50 characters"),
+
+	body("lastName")
+		.trim()
+		.optional({ values: "null" })
+		.isAlpha("en-AU", { ignore: "-" })
+		.withMessage("Last name must only contain letters and hyphens")
+		.isLength({ min: 1, max: 50 })
+		.withMessage("Last name must be between 1 and 50 characters"),
+
+	body("website")
+		.trim()
+		.optional({ values: "null" })
+		.isURL()
+		.withMessage("Website is not a valid URL"),
 ];
 
 export default validateSignupForm;
