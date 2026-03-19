@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginPost, validateJwtGet } from "@/controllers/authController";
+import { loginPost, validateJwtGet } from "@/controllers/auth";
 
 const authRouter = Router();
 

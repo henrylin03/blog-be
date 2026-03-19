@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getMyPosts, newUserPost } from "@/controllers/usersController";
+import { getMyPosts, newUserPost } from "@/controllers/users";
 import { authenticateWithJwt, checkIsAuthor } from "@/middleware/auth";
 
 const usersRouter = Router();

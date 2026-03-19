@@ -7,7 +7,7 @@ import {
 	getPublishedPosts,
 	publishPost,
 	unpublishPost,
-} from "@/controllers/postsController";
+} from "@/controllers/posts";
 import { attachPost } from "@/middleware/attach";
 import { authenticateWithJwt, checkIsAuthor } from "../middleware/auth";
 import commentsRouter from "./commentsRouter";

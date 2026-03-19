@@ -4,7 +4,7 @@ import {
 	deleteComment,
 	editComment,
 	getComments,
-} from "@/controllers/commentsController";
+} from "@/controllers/comments";
 
 const commentsRouter = Router({ mergeParams: true });
 
