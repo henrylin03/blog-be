@@ -47,10 +47,14 @@ const getMyPosts = async (req: AuthenticatedRequest, res: Response) => {
 			: {};
 
 	try {
-		const myPosts = await prisma.post.findMany({
+		const myLatestPosts = await prisma.post.findMany({
 			where: { AND: { authorId: req.user.id, ...isPublishedFilterQuery } },
+			include: { comments: true },
+			orderBy: {
+				lastModifiedAt: "desc",
+			},
 		});
-		res.status(200).json({ posts: myPosts });
+		res.status(200).json({ posts: myLatestPosts });
 	} catch (error) {
 		res.status(500).json({ error });
 	}
